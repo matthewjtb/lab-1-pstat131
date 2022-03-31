@@ -94,6 +94,8 @@ Try updating the code in the following code chunk. Assign `2+2` to another objec
 # For example:
 x <- seq(1, 10, 1)
 x
+y <- 2 + 2
+y
 ```
 
 Take some time and work through the Markdown tutorial here: [www.markdown-tutorial.com](www.markdown-tutorial.com).
@@ -116,7 +118,7 @@ library(ISLR)
 
 Some packages include datasets when they are loaded. Set `eval = TRUE` and knit your .Rmd to run the following code chunk:
 
-```{r, eval = FALSE}
+```{r, eval = TRUE}
 mpg
 ```
 
@@ -156,6 +158,36 @@ On your own, find ways to filter the `flights` data set from the `nycflights13` 
 - Were delayed by at least an hour, but made up over 30 minutes in flight
 - Departed between midnight and 6am (inclusive)
 
+```{r}
+install.packages("nycflights13")
+library(nycflights13)
+flights
+```
+```{r}
+# Arrival delay >= 2 hr
+flights %>% filter(arr_delay >= 120)
+
+# flew to houston
+flights %>% filter(dest == 'IAH' | dest == 'HOU')
+
+# operated by United, American, Delta
+unique(flights$carrier)
+flights %>% filter(carrier == 'UA' | carrier == 'AA' | carrier == 'DL')
+
+# departed in summer
+flights %>% filter(month >= 7 & month <= 9)
+
+# arrived >2 hr late, didn't leave late
+flights %>% filter(arr_delay > 120 & dep_delay <= 0)
+
+# delayed >= 1 hr, made up 30 min in flight
+flights %>% filter(dep_delay >= 60 & dep_delay - arr_delay >= 30)
+
+# departed between midnight at 6am
+flights %>% filter(dep_time >= 0 & dep_time <= 600)
+
+```
+
 ### Select specific variables or columns by their names: `select()`
 
 Often in machine learning, we end up working with very large data sets that have a lot of columns. The `mpg` data set is pretty small, but we can still practice with it.
@@ -188,6 +220,14 @@ On your own, working with the `flights` data:
 - Find as many ways as you can to select `dep_time`, `dep_delay`, `arr_time`, and `arr_delay`.
 
 - What happens if you include the name of a variable multiple times in a `select()` call?
+
+```{r}
+flights %>% select(dep_time, dep_delay, arr_time, arr_delay)
+
+flights %>% select(dep_time, dep_delay, dep_time, arr_delay)
+
+
+```
 
 ### Create or add new variables: `mutate()`
 
